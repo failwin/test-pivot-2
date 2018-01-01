@@ -1,0 +1,15 @@
+Dir,Name,Cost,Year,Monts,Discount
+A,Max,12,2016,1,2
+A,Yura,20,2016,2,4
+A,Max,11,2017,1,3
+A,Yura,15,2017,2,6
+A,Max,12,2016,1,6
+A,Yura,20,2016,3,5
+A,Max,11,2017,1,5
+A,Yura,15,2017,2,3
+A,Max,3,2018,1,8
+A,Yura,6,2018,1,6
+B,Ivan,10,2016,1,8
+B,Pasha,30,2016,1,3
+B,Ivan,22,2017,1,6
+B,Pasha,33,2017,1,1
