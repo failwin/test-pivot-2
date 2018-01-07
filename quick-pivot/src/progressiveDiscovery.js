@@ -8,7 +8,7 @@
  * @param {Array<Object>} data
  * @returns {Object}
 */
-export function collapse(rowNum, data) {
+function collapse(rowNum, data) {
   /** get the current row, row type, and row depth */
   const selectedRow = data.table[rowNum];
   const {type, depth} = selectedRow;
@@ -64,7 +64,7 @@ export function collapse(rowNum, data) {
  * @param {Object} collapsedRows
  * @returns {Object}
 */
-export function expand(rowNum, currData, collapsedRows) {
+function expand(rowNum, currData, collapsedRows) {
   /** if there are no collapsed rows, then just return data */
   if (!collapsedRows) return currData;
 
@@ -74,3 +74,8 @@ export function expand(rowNum, currData, collapsedRows) {
 
   return currData;
 }
+
+module.exports = {
+    collapse,
+    expand
+};

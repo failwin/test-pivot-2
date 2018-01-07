@@ -1,11 +1,19 @@
 /**
  * @file Pivot class with methods
 */
-import { tableCreator, fixDataFormat } from './logic';
-import { collapse, expand } from './progressiveDiscovery.js';
-import { createUniqueValues, filter } from './filtering.js';
+const logic = require('./logic');
+const progressiveDiscovery = require('./progressiveDiscovery');
+const filtering = require('./filtering');
 
-export default class Pivot {
+const tableCreator = logic.tableCreator;
+const fixDataFormat = logic.fixDataFormat;
+const collapse = progressiveDiscovery.collapse;
+const expand = progressiveDiscovery.expand;
+const createUniqueValues = filtering.createUniqueValues;
+const filter = filtering.filter;
+
+
+class Pivot {
 
   /**
    * instantiates the Pivot class
@@ -82,7 +90,7 @@ export default class Pivot {
     this.data = expand(
       rowNum,
       this.data,
-      this.collapsedRows[this.data.table[rowNum].row],
+      this.collapsedRows[this.data.table[rowNum].row]
     );
     delete this.collapsedRows[this.data.table[rowNum].row];
 
@@ -189,3 +197,5 @@ export default class Pivot {
   }
 
 }
+
+module.exports = Pivot;

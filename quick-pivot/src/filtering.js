@@ -7,7 +7,7 @@
  * @param {!Array<Object>} data
  * @returns {!Object} Keys are field names, each value is an object with the unique values as keys
 */
-export function createUniqueValues(data) {
+function createUniqueValues(data) {
   return data.reduce((acc, curr) => {
     Object.keys(curr).forEach((fieldName) => {
       if (!acc[fieldName]) acc[fieldName] = {};
@@ -27,7 +27,7 @@ export function createUniqueValues(data) {
  * @param {string} filterType Enumerated string either 'include' or 'exclude'
  * @returns {!Array<Object>} filtered data set
 */
-export function filter(data, fieldName, filterValues, filterType) {
+function filter(data, fieldName, filterValues, filterType) {
   /** check that fieldName isn't actually a callback */
   if (typeof fieldName !== 'function') {
     /** filter out the data set based on the provided fieldName and filterValues */
@@ -52,4 +52,9 @@ export function filter(data, fieldName, filterValues, filterType) {
   return data.filter((dataRow, index, array) => {
     return fieldName(dataRow, index, array);
   });
+};
+
+module.exports = {
+    createUniqueValues,
+    filter
 };

@@ -7,7 +7,8 @@
  * @param {!Array|Object} data Array of arrays or an object
  * @returns {Array<Object>} Formatted object
 */
-export function fixDataFormat(data, rows = []) {
+function fixDataFormat(data, rows = []) {
+  console.log('fixDataFormat');
   if (!Array.isArray(data) || !data.length) return [];
 
   let formattedData = [];
@@ -50,7 +51,7 @@ export function fixDataFormat(data, rows = []) {
  * @param {string} groupBy Category to group by
  * @returns {Object} Each key in the object is one the category groups
 */
-export function groupByCategory(data, groupBy) {
+function groupByCategory(data, groupBy) {
   return data.reduce((acc, curr) =>{
     const category = curr[groupBy];
 
@@ -68,7 +69,7 @@ export function groupByCategory(data, groupBy) {
  * @returns {Object} Deeply nested object
  * where each key is one the category groups
 */
-export function groupByCategories(data, groups = [], acc = {}) {
+function groupByCategories(data, groups = [], acc = {}) {
   /**
    * base case - if data is empty
    * or if there are no more groups to group by
@@ -95,7 +96,8 @@ export function groupByCategories(data, groups = [], acc = {}) {
  * @param {string} firstColumn A string to place in the first column header
  * @returns {Object} columnHeaders (array of arrays) and mapToHeader (object)
 */
-export function createColumnHeaders(data, cols = [], firstColumn = '') {
+function createColumnHeaders(data, cols = [], firstColumn = '') {
+    console.log('createColumnHeaders');
   if (cols.length === 0) {
     return {
       columnHeaders: [firstColumn],
@@ -149,11 +151,11 @@ export function createColumnHeaders(data, cols = [], firstColumn = '') {
  * @returns {*} Reduced value
  * @todo Move accumulator to its own file since it will continue to grow
 */
-export function accumulator(arr, accCat, accType, accValue) {
+function accumulator(arr, accCat, accType, accValue) {
   if (typeof accCat === 'undefined') accType = 'count';
   else if (typeof accCat === 'function') accValue = accType || 0;
 
-  return arr.reduce((acc, curr, index, array) => {
+  const res = arr.reduce((acc, curr, index, array) => {
     if (typeof accCat === 'function') return accCat(acc, curr, index, array);
 
     switch (accType) {
@@ -196,6 +198,10 @@ export function accumulator(arr, accCat, accType, accValue) {
       }
     }
   }, accValue || 0);
+
+  console.log('accumulator res', res);
+
+  return res;
 }
 
 /**
@@ -204,7 +210,7 @@ export function accumulator(arr, accCat, accType, accValue) {
  * @param {!Array<string>} selectedCats Categories to pivot selected by user
  * @throws Will throw an error if the category does not exist
 */
-export function checkPivotCategories(actualCats, selectedCats) {
+function checkPivotCategories(actualCats, selectedCats) {
   const errMessage = selectedCats.filter((selectedCat) => {
     return !(selectedCat in actualCats);
   });
@@ -215,9 +221,9 @@ export function checkPivotCategories(actualCats, selectedCats) {
   }
 }
 
-export function tableCreator(data, rows = [], cols = [], accCatOrCB,
+function tableCreator(data, rows = [], cols = [], accCatOrCB,
   accTypeOrInitVal, rowHeader) {
-
+  console.log('tableCreator');
   /** if data is empty, return empty array */
   if (data.length === 0) {
     return {
@@ -338,7 +344,8 @@ export function tableCreator(data, rows = [], cols = [], accCatOrCB,
   if (rows.length > 0) {
     for (let i = 0; i < rows.length; i++) {
       // possible memoization opportunity
-      rowRecurse(groupByCategories(data, rows.slice(0, i + 1)), 0, dataGroups);
+        let grouped = groupByCategories(data, rows.slice(0, i + 1));
+      rowRecurse(grouped, 0, dataGroups);
       dataGroups = Object.assign([], dataRows);
       if (i + 1 < rows.length) {
         dataRows = [];
@@ -348,7 +355,8 @@ export function tableCreator(data, rows = [], cols = [], accCatOrCB,
     }
   } else if (cols.length > 0) {
     for (let i = 0; i < cols.length; i++) {
-      rowRecurse(groupByCategories(data, cols.slice(0, i + 1)), 0, dataGroups);
+        let grouped = groupByCategories(data, cols.slice(0, i + 1));
+      rowRecurse(grouped, 0, dataGroups);
       dataGroups = Object.assign([], dataRows);
       if (i + 1 < cols.length) {
         dataRows = [];
@@ -374,6 +382,7 @@ export function tableCreator(data, rows = [], cols = [], accCatOrCB,
   }
 
   function tableRowAggregator(rows) {
+      console.log('tableRowAggregator');
     const filteredRows = rows.reduce((acc, { type, value }) => {
       if (acc.length === 0) {
         acc = Array(value.length).fill([]);
@@ -400,6 +409,7 @@ export function tableCreator(data, rows = [], cols = [], accCatOrCB,
   }
 
   function tableColumnAggregator(rows) {
+    console.log('tableColumnAggregator');
     const filteredRows = rows.reduce((acc, { type, value }) => {
       if (type === 'data') {
         const i = acc.length;
@@ -462,3 +472,13 @@ export function tableCreator(data, rows = [], cols = [], accCatOrCB,
     rawData: formattedColumnHeaders.concat(rawData),
   };
 }
+
+module.exports = {
+    fixDataFormat,
+    groupByCategory,
+    groupByCategories,
+    createColumnHeaders,
+    accumulator,
+    checkPivotCategories,
+    tableCreator
+};
